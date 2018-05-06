@@ -6,7 +6,7 @@
  * Github: https://github.com/lbmzorx
  */
 
-namespace common\components\behaviors;
+namespace lbmzorx\components\behaviors;
 
 
 use common\models\data\User;
