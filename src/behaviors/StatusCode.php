@@ -9,10 +9,19 @@ namespace lbmzorx\components\behaviors;
 
 use Yii;
 use yii\base\Behavior;
-
 class StatusCode extends Behavior
 {
+
     public static $cssCode=[0=>'warning',1=>'success',2=>'danger',3=>'info',4=>'primary',];
+    public static $category='statuscode';
+
+    public function setCategory($category){
+        static::$category=$category;
+    }
+
+    public function getCategory(){
+        return static::$category;
+    }
 
     /**
      * 获取状态码
@@ -24,7 +33,7 @@ class StatusCode extends Behavior
      public function getStatusCode($attribute,$statuCode,$default=''){
          $class=get_class($this->owner);
          $value=$this->owner->{$attribute};
-         return isset($class::${$statuCode}[$value])?Yii::t('app',$class::${$statuCode}[$value]):$default;
+         return isset($class::${$statuCode}[$value])?Yii::t($this->category,$class::${$statuCode}[$value]):Yii::t($this->category,$default);
     }
 
     public function getStatusCss($attribute,$statuCode,$default=0){
