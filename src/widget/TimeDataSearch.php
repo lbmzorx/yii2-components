@@ -90,7 +90,8 @@ class TimeDataSearch extends Widget
         }
         $btn = implode('\',\'',$this->jsbtn);
 
-        $view->registerAssetBundle(LayerAsset::className());
+        LayerUse::widget([]);
+
         $view->registerAssetBundle(LayuiAsset::className());
         $view->registerJs(<<<SCRITYT
          $('#{$this->options['id']}').click(function(){

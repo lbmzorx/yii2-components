@@ -43,12 +43,6 @@ class RangeTime extends Widget
     public function config(){
         \common\assets\LayuiAsset::register($this->view);
 
-
-
-
-
-
-
         $this->view->registerJs(<<<SCRIPT
         var laydate;var layuier;layui.use(['laydate','layer'], function(){ layuidate = layui.laydate;layuier = layui.layer;
    //日期时间范围

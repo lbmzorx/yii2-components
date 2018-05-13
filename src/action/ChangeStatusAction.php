@@ -34,24 +34,30 @@ class ChangeStatusAction extends Action
         if($id){
             $ids = explode(',', $id);
             $t=Yii::$app->db->beginTransaction();
+            $k=0;
             foreach ($ids as $id){
                 if(preg_match('/[\d]+/',$id)){
                     $model = ($this->modelClass)::findOne($id);
                     if($model){
                         $model->setScenario( $this->scenario );
+                        if($model->$key==$value){
+                            $k++;
+                            continue;
+                        }
                         if($model->load([$key=>$value],'')&&$model->save()){
                             continue;
                         }else{
-                            $t->rollBack();
                             $msg= ['status'=>false,'msg'=>Yii::t('app',current($model->getFirstErrors()))];
                             break;
                         }
                     }
                 }
             }
+            if($k==count($ids)){
+                $msg= ['status'=>false,'msg'=>Yii::t('app','Unchange')];
+            }
             if(isset($msg)){
                 $t->rollBack();
-
             }else{
                 $t->commit();
                 $msg= ['status'=>true,'msg'=>Yii::t('app','Edit success')];
@@ -64,6 +70,12 @@ class ChangeStatusAction extends Action
             \yii::$app->getResponse()->format=Response::FORMAT_JSON;
             return $msg;
         }else{
+            if($msg['status']==true){
+                \yii::$app->getSession()->setFlash('success', yii::t('app', 'Success'));
+            }else{
+                \yii::$app->getSession()->setFlash('error', yii::t('app', $msg['msg']));
+            }
+
             return $this->controller->redirect($this->viewFile);
         }
     }

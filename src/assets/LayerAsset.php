@@ -10,13 +10,9 @@ use yii\web\View;
  */
 class LayerAsset extends AssetBundle
 {
-    public $sourcePath = '@@vendor/lbmzorx/yii2-components/src/static/js/layer';
+    public $sourcePath = '@vendor/lbmzorx/yii2-components/src/static/vendor/layer';
 
     public $js = [
         'layer.js'
-    ];
-
-    public $jsOptions=[
-        'position'=>View::POS_END,
     ];
 }

@@ -32,7 +32,7 @@ class StatusCodeColumn extends \yii\grid\DataColumn
             $btn = implode('\',\'',$this->jsOptions['btn']);
             $laydateJs =<<<str
 $('.{$this->attribute}-change').click(function(){
-    var sval=$(this).attr('key'),this_dom=$(this),
+    var sval=$(this).attr('data-value'),this_dom=$(this),
         sid=$(this).attr('data-id');
     var dom_status_change=$('#{$this->attribute}-change-dom');                
     dom_status_change.find('input[value="'+sval+'"]').prop('checked','true');

@@ -15,6 +15,7 @@ class LbmzorxAsset extends AssetBundle
     ];
 
     public $depends=[
-        'yii\web\JqueryAsset',
+        'jquery'=>'yii\web\JqueryAsset',
+        'layer'=>'lbmzorx\components\assets\LayerAsset',
     ];
 }

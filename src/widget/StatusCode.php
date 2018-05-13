@@ -53,8 +53,8 @@ class StatusCode extends Widget
                 $attibutecss = $this->attribute."_css";
                 $css='warning';
                 if(empty(($this->dataClass)::$$attibutecss)){
-                    if(!empty(\lbmzorx\components\behaviors\StatusCode::$cssCode[$k])){
-                        $css=\lbmzorx\components\behaviors\StatusCode::$cssCode[$k];
+                    if(!empty(\lbmzorx\components\behavior\StatusCode::$cssCode[$k])){
+                        $css=\lbmzorx\components\behavior\StatusCode::$cssCode[$k];
                     }
                 }else{
                     $css=($this->dataClass)::$$attibutecss;

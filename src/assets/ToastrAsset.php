@@ -8,7 +8,7 @@ use yii\web\AssetBundle;
  */
 class ToastrAsset extends AssetBundle
 {
-    public $sourcePath='@vendor/lbmzorx/yii2-components/src/static/js/toastr';
+    public $sourcePath='@vendor/lbmzorx/yii2-components/src/static/vendor/toastr';
 
     public $css=[
         'toastr.css'

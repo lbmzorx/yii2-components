@@ -1,14 +1,12 @@
 <?php
 namespace lbmzorx\components\widget;
 
-use common\assets\LayerAsset;
-use common\assets\LayuiAsset;
+use lbmzorx\components\assets\LayuiAsset;
 use Yii;
-use yii\base\InvalidConfigException;
-use yii\helpers\Html;
+use yii\base\Exception;
 use yii\base\Widget;
-use yii\data\Pagination;
-use yii\helpers\ArrayHelper;
+use yii\helpers\VarDumper;
+use yii\web\View;
 
 /**
  * LinkPager displays a list of hyperlinks that lead to different pages of target.
@@ -28,23 +26,12 @@ use yii\helpers\ArrayHelper;
 class LayuiUse extends Widget
 {
 
-    public $options=[];
-    public $layuiUse=['layerdate'];
+    public $module=['laydate'];
     public $content='';
-    public static $used=0;
+    public static $usedModule=[];
 
-    /**
-     * Initializes the pager.
-     */
-    public function init()
-    {
-        if( empty($this->options['id'])){
-            $this->options['id']='batch_delete';
-        }
-        if( empty($this->options['class'])){
-            $this->options['class']='btn btn-success';
-        }
-    }
+    public static $layuiConfigCount=0;
+
 
     /**
      * Executes the widget.
@@ -55,21 +42,67 @@ class LayuiUse extends Widget
         $this->renderJs();
     }
 
+    public function checkModule(){
+        if(!is_array($this->module)){
+            $this->module=(array)$this->module;
+        }
+
+        $module=array_diff($this->module,static::$usedModule);
+        static::$usedModule=array_merge(static::$usedModule,$module);
+        return static::$usedModule;
+    }
+
     public function renderJs(){
         $view = \yii::$app->getView();
         $view->registerAssetBundle(LayuiAsset::className());
 
-        if(static::$used==0){
+        if(static::$layuiConfigCount==0){
+            $dir=$view->assetBundles[LayuiAsset::className()]->baseUrl;
             $view->registerJs(<<<SCRITYT
-        var laydate;
-        layui.use(['laydate'], function(){
-            laydate=layui.laydate;
-            {$this->content}
-        });
+layui.config({
+  dir: '{$dir}/' //layui.js 所在路径
+});
 SCRITYT
-            );
-            static::$used++;
+                ,View::POS_END);
+            static::$layuiConfigCount++;
         }
 
+
+        $module=$this->checkModule();
+        $var='';
+        $defined='';
+        foreach ($module as $v){
+            $var ='var '.$v.';';
+            $defined.=$v.'='.'layui.'.$v.';';
+        }
+        $used=implode('\',\'',$module);
+        if($used){
+            $script=<<<SCRITYT
+/*layvar*start*/
+{$var}
+/*layvar*end*/
+layui.use(['{$used}'],function(){
+{$defined}
+/*laycontent*start*/
+{$this->content}
+/*laycontent*end*/});
+SCRITYT
+            ;
+            if(isset($view->js[View::POS_READY]['layui'])){
+                $layuiCss=$view->js[View::POS_READY]['layui'];
+                if(preg_match('/(\/\*laycontent\*start\*\/)([.\s\S]*)(\/\*laycontent\*end\*\/)/',$layuiCss,$match)){
+                    $script=<<<SCRITYT
+/*layvar*start*/
+{$var}
+/*layvar*end*/
+layui.use(['{$used}'],function(){
+{$defined}
+/*laycontent*start*/{$match[2]}{$this->content}/*laycontent*end*/});
+SCRITYT
+                    ;
+                }
+            }
+            $view->registerJs($script,View::POS_READY,'layui');
+            }
     }
 }

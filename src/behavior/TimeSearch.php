@@ -32,8 +32,8 @@ class TimeSearch extends \yii\base\Behavior
 
     public function beforeSearch($event)
     {
-        /** @var $event \lbmzorx\components\events\SearchEvent */
-        foreach ($this->timeAttributes as $filed => $attribute) {
+        /** @var $event \lbmzorx\components\event\SearchEvent */
+        foreach ($this->timeAttributes as $attribute) {
             if($attribute !== null) $timeAt = $event->sender->{$attribute};
             if( !empty($timeAt) ){
                 $time =explode($this->delimiter, $timeAt);
@@ -45,8 +45,8 @@ class TimeSearch extends \yii\base\Behavior
                     $startAt = $time[0];
                     $endAt = $time[1];
                 }
-                $event->query->andFilterWhere(['>=',$filed,$startAt]);
-                $event->query->andFilterWhere(['<=',$filed,$endAt]);
+                $event->query->andFilterWhere(['>=',$attribute,$startAt]);
+                $event->query->andFilterWhere(['<=',$attribute,$endAt]);
             }
         }
     }

@@ -1,7 +1,6 @@
 <?php
 namespace lbmzorx\components\widget;
 
-use common\assets\LayerAsset;
 use Yii;
 use yii\helpers\Html;
 use yii\base\Widget;
@@ -73,7 +72,8 @@ class BatchUpdate extends Widget
         $confimMsg=Yii::t('app',$this->jsConfirmMsg);
         $unChoose = Yii::t('app',$this->unChoose);
 
-        $view->registerAssetBundle(LayerAsset::className());
+        LayerUse::widget([]);
+
         $view->registerJs(<<<SCRITYT
 $('#{$this->options['id']}').click(function(){           
     var keys = $('#w{$this->griViewKey}').yiiGridView('getSelectedRows');
