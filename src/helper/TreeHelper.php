@@ -9,7 +9,7 @@
 namespace lbmzorx\components\helper;
 
 
-class Cate
+class TreeHelper
 {
 
     /**
