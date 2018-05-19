@@ -9,7 +9,7 @@ use yii\web\AssetBundle;
  */
 class LayuiAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/lbmzorx/yii2-components/src/static/vendor/layui-v2.2.5/layui/';
+    public $sourcePath = '@vendor/lbmzorx/yii2-components/src/static/vendor/layui-v2.2.5/';
 
     public $css=[
         'css/layui.css'
