@@ -20,6 +20,6 @@ class EditormdAsset extends AssetBundle
     ];
 
     public $depends=[
-        'jquery'=>'common\assets\JqueryAsset',
+        'jquery'=>'yii\web\JqueryAsset',
     ];
 }

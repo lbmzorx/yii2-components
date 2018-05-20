@@ -9,7 +9,7 @@ use yii\web\AssetBundle;
  */
 class JsencryptAsset extends AssetBundle
 {
-    public $sourcePath = '@vendor/lbmzorx/yii2-components/src/static/js/jsencrypt/';
+    public $sourcePath = '@vendor/lbmzorx/yii2-components/src/static/vendor/jsencrypt/';
 
     public $js = [
         'jsencrypt.min.js'

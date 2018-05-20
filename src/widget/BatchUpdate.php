@@ -19,9 +19,10 @@ class BatchUpdate extends Widget
     public $btnIcon='';
     public $unChoose = 'At least Choose One to update!';
     public $jsConfirmMsg="Are you want to update ?";
-    public $jsConfirm=['ok','cancel'];
-    public $jsSelect=['ok','cancel'];
+    public $jsConfirm=['Ok','Cancel'];
+    public $jsSelect=['Ok','Cancel'];
     public $attribute='';
+    public $category='app';
 
 
     public function init()
@@ -49,9 +50,9 @@ class BatchUpdate extends Widget
 
         if($this->isIcon){
             $trush = Html::tag('i', '', ['class' => "fa fa-{$this->btnIcon}"]);
-            $name=$trush.'&nbsp;'.Yii::t('app',"Batch Update {name}", ['name' => $this->name]);
+            $name=$trush.'&nbsp;'.Yii::t($this->category,"Batch Update {name}", ['name' => $this->name]);
         }else{
-            $name=Yii::t('app',"Batch Update {name}", ['name' => $this->name]);
+            $name=Yii::t($this->category,"Batch Update {name}", ['name' => $this->name]);
         }
         return Html::button($name,$this->options);
     }
@@ -61,16 +62,16 @@ class BatchUpdate extends Widget
         $view = \yii::$app->getView();
 
         foreach ($this->jsSelect as $k=>$v){
-            $this->jsSelect[$k]=Yii::t('app',$v);
+            $this->jsSelect[$k]=Yii::t($this->category,$v);
         }
         $jsSelect = implode('\',\'',$this->jsSelect);
         foreach ($this->jsConfirm as $k=>$v){
-            $this->jsConfirm[$k]=Yii::t('app',$v);
+            $this->jsConfirm[$k]=Yii::t($this->category,$v);
         }
         $jsConfirm = implode('\',\'',$this->jsConfirm);
 
-        $confimMsg=Yii::t('app',$this->jsConfirmMsg);
-        $unChoose = Yii::t('app',$this->unChoose);
+        $confimMsg=Yii::t($this->category,$this->jsConfirmMsg);
+        $unChoose = Yii::t($this->category,$this->unChoose);
 
         LayerUse::widget([]);
 

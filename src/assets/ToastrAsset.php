@@ -18,6 +18,6 @@ class ToastrAsset extends AssetBundle
     ];
 
     public $depends=[
-        'common\assets\JqueryAsset',
+        'yii\web\JqueryAsset',
     ];
 }
