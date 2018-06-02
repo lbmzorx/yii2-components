@@ -27,7 +27,7 @@ class UploadImgField extends ActiveField
         $id=$this->getInputId();
         $btn=Html::button(\Yii::t('app','Upload Image'),['class'=>'layui-upload btn btn-info','id'=>'btn-'.$id]);
         $list=Html::tag('div',
-            Html::img($this->model->{$this->attribute},['class'=>'layui-upload-img','id'=>'img-'.$id]).Html::tag('p','',['id'=>'p-'.$id])
+            Html::img($this->model->{$this->attribute},['class'=>'layui-upload-img','id'=>'img-'.$id,'style'=>'max-width:-webkit-fill-available;']).Html::tag('p','',['id'=>'p-'.$id])
             ,['class'=>'layui-upload-list']
         );
         $img=Html::activeInput('hidden',$this->model, $this->attribute, $options);

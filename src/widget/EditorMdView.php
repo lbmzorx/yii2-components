@@ -17,7 +17,6 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\base\InvalidConfigException;
-use yii\i18n\Formatter;
 use yii\base\Model;
 use yii\web\View;
 
@@ -64,8 +63,6 @@ class EditorMdView extends Widget
         }
     }
 
-
-
     public function renderTextarea($options = [])
     {
         $optionTextarea = array_merge($this->optionTextarea, $options);
@@ -77,9 +74,9 @@ class EditorMdView extends Widget
 
     public function renderMdJs(){
         $view=\yii::$app->getView();
-        EditormdAsset::register($view);
+        $editormd=EditormdAsset::register($view);
         EditormdLibAsset::register($view);
-        $editormdUrl=$view->assetBundles[\common\assets\EditormdAsset::className()]->baseUrl;
+        $editormdUrl=$editormd->baseUrl;
         $idMd=$this->getMdeditorId();
 
         $mdJsOptions=ArrayHelper::merge($this->mdJsOptions,[
@@ -88,7 +85,7 @@ class EditorMdView extends Widget
             'taskList'=> false,
             'tex'=> false,
             'flowChart'=> false,
-            'sequenceDiagram'=> false,
+            'sequenceDiagram'=> false
         ]);
         $mdJsOptions=ArrayHelper::merge($mdJsOptions,[
             'path'=>$editormdUrl.'/lib/',

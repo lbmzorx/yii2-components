@@ -13,6 +13,7 @@ use common\assets\EditormdAsset;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\widgets\ActiveField;
 
 class EditorMdField extends ActiveField
@@ -42,7 +43,7 @@ class EditorMdField extends ActiveField
         $editormdUrl=$view->assetBundles[\common\assets\EditormdAsset::className()]->baseUrl;
         $idMd=$this->getMdeditorId();
 
-        $mdJsOptions=ArrayHelper::merge($this->mdJsOptions,[
+        $mdJsOptions=ArrayHelper::merge([
             'width'=>'100%',
             'height'=>'640',
             'syncScrolling'=>"single",
@@ -63,15 +64,48 @@ class EditorMdField extends ActiveField
             'tex'=>true,                   // 开启科学公式TeX语言支持，默认关闭
             'flowChart'=>true,             // 开启流程图支持，默认关闭
             'sequenceDiagram'=>true,       // 开启时序/序列图支持，默认关闭',
-        ]);
+        ],$this->mdJsOptions);
+
         $mdJsOptions=ArrayHelper::merge($mdJsOptions,[
             'path'=>$editormdUrl.'/lib/',
             'name'=>$this->attribute,
         ]);
 
+        $mdJsOptions=ArrayHelper::merge($mdJsOptions,[
+            'imageUpload'=>true,
+            'imageFormats'=>["jpg", "jpeg", "png"],
+            'imageUploadURL'=>Url::to(['upload']),
+            'imageInputName'=>'UploadImg[imageFile]',
+            'imageCsrfName'=>\yii::$app->getRequest()->csrfParam,
+            'imageCsrfTocken'=>\yii::$app->getRequest()->getCsrfToken(),
+        ]);
+
         $mdJsOptionsJson=Json::encode($mdJsOptions);
+        $mdJsOptionsJson=rtrim($mdJsOptionsJson,'}');
         $keymd=substr(md5($idMd),0,10);
-        $view->registerJs("var md{$keymd}; $(function() { md{$keymd}=editormd('$idMd',$mdJsOptionsJson);$('.editormd-preview-close-btn').hide()})");
+        $view->registerJs("
+function onfullscreen() {
+    $('#nav-top').hide('fast');
+    $('#sidebar-nav').hide('fast');
+    $('#side-box').hide('fast');
+    $('.navbar-fixed-top').hide('fast');
+    $('#$idMd').parent('.row').siblings().hide();
+    if(typeof fullscreenOpenTriger == 'function'){
+        fullscreenOpenTriger();
+    }
+}
+function onfullscreenExit() {
+    $('#nav-top').show('fast');
+    $('#sidebar-nav').show('fast');
+    $('#side-box').show('fast');
+    $('.navbar-fixed-top').show('fast');
+    $('#$idMd').parent('.row').siblings().show();
+    if(typeof fullscreenExitTriger == 'function'){
+        fullscreenExitTriger();
+    }
+}
+var md{$keymd};md{$keymd}=editormd('$idMd',$mdJsOptionsJson,onfullscreen:onfullscreen,onfullscreenExit:onfullscreenExit});$('.editormd-preview-close-btn').hide();
+");
     }
 
     public function getMdeditorId(){

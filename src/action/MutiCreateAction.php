@@ -10,6 +10,7 @@ namespace lbmzorx\components\action;
 
 use Yii;
 use yii\base\Action;
+use yii\db\Transaction;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use yii\web\HttpException;
@@ -44,7 +45,7 @@ class MutiCreateAction extends Action
      */
     public function run()
     {
-        /* @var $model yii\db\ActiveRecord */
+        /* @var $model \yii\db\ActiveRecord */
         $model = new $this->modelClass;
         $depances=$this->newDepance();
 
@@ -53,10 +54,14 @@ class MutiCreateAction extends Action
         if ($request->getIsPost()) {
             $depances['model']=$model;
             if($this->transation){
-                $t=\yii::$app->getDb()->beginTransaction();
+                /**
+                 * @var $t \yii\db\Transaction
+                 */
+                $t=($this->modelClass)::getDb()->beginTransaction();
             }
 
             $status=$this->save($depances);
+
             if ($status == true) {
                 if($this->transation){
                     $t->commit();
@@ -108,7 +113,7 @@ class MutiCreateAction extends Action
         if(!empty($models)){
             foreach($this->_linkStack as $name){
                 /**
-                 * @var yii\base\Model $models[$name];
+                 * @var \yii\base\Model $models[$name];
                  */
                 $load=$models[$name]->load(Yii::$app->getRequest()->post());
                 if( $data=$this->loadCondition('model',$models) ){
@@ -208,7 +213,7 @@ class MutiCreateAction extends Action
                     $name=StringHelper::basename($depance['class']);
 
                     /**
-                     * @var yii\db\ActiveRecord $depanceModels
+                     * @var \yii\db\ActiveRecord $depanceModels
                      */
                     $depanceModels[$name]=Yii::createObject($depance['class']);
 
@@ -222,7 +227,7 @@ class MutiCreateAction extends Action
             }else{
                 $name=StringHelper::basename($this->depandeClass['class']);
                 /**
-                 * @var yii\db\ActiveRecord $depanceModels
+                 * @var \yii\db\ActiveRecord $depanceModels
                  */
                 $depanceModels[$name]=Yii::createObject($this->depandeClass['class']);
                 if(isset($this->depandeClass['scenario'])){

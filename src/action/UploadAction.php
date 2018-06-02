@@ -19,6 +19,7 @@ class UploadAction extends \yii\base\Action
 
     public $imgClass;
 
+    public $imgAttribute='uploadFile';
     public $imgConfig=[];
     /**
      * 依赖模型，
@@ -50,21 +51,16 @@ class UploadAction extends \yii\base\Action
      */
     public function run()
     {
-
+//        \yii::$app->response->format=yii\web\Response::FORMAT_JSON;
         $request=\Yii::$app->getRequest();
 
-        $id=$request->get($this->paramSign);
-        if($id){
-            $model= call_user_func([$this->modelClass, 'findOne'], $id);
-            $this->imgConfig['nameModel']=$model;
-        }
         if(empty($this->imgConfig['class'])){
             $this->imgConfig['class']=$this->imgClass;
         }
         $imgModel=Yii::createObject($this->imgConfig);
 
         if ($request->isPost) {
-            $imgModel->imageFile =\yii\web\UploadedFile::getInstance($imgModel, 'imageFile');
+            $imgModel->{$this->imgAttribute} =\yii\web\UploadedFile::getInstance($imgModel, $this->imgAttribute);
             if ($imgModel->upload()) {
                 $status=true;
             }else{
@@ -72,26 +68,29 @@ class UploadAction extends \yii\base\Action
                 $status=false;
             }
         }else{
-            return "{msg:ok}";
-//            throw new BadRequestHttpException(yii::t('app', "Upload only support post data"));
+            $err=\yii::t('app','Parameter Error!');
+            $status=false;
+//            return ['status'=>false,'success' =>0,'message'=> "Upload only support post data",'msg' => "Upload only support post data"];
         }
 
         if($request->isAjax){
             yii::$app->getSession()->setFlash('success', yii::t('app', 'Success'));
             \yii::$app->response->format=yii\web\Response::FORMAT_JSON;
             if($status==true){
-                return ['success'=>1,'message'=>yii::t('app','Upload Success'),'url'=>$imgModel->urlName];
+                return ['status'=>true,'success'=>1,'message'=>yii::t('app','Upload Success'),'msg'=>yii::t('app','Upload Success'),'url'=>$imgModel->urlName];
             }else {
-                return ['success' =>0,'message' =>$err];
+                return ['status'=>false,'success' =>0,'message'=>$err,'msg' =>$err];
             }
         }else{
             if($status==true){
-                return json_encode(['success'=>1,'message'=>yii::t('app','Upload Success'),'url'=>$imgModel->urlName]);
+                return json_encode(['status'=>true,'success'=>1,'msg'=>yii::t('app','Upload Success'),'url'=>$imgModel->urlName]);
 //                if( $this->successRedirect ) return $this->controller->redirect($this->successRedirect);
 //                return $this->controller->refresh();
             }else {
                 yii::$app->getSession()->setFlash('error', $err);
-                return $this->controller->redirect($this->viewFile);
+                return json_encode(['status'=>false,'success'=>0,'message'=>$err,'msg'=>$err,'url'=>$imgModel->urlName]);
+
+//                return $this->controller->redirect($this->viewFile);
             }
 
         }
