@@ -50,6 +50,7 @@ class EditorMdField extends ActiveField
             'watch'=> true,
             'emoji' => true,
             'codeFold'=>true,
+            'autoFocus'=>false,
             'preview'=>false,
             //syncScrolling'=>'false',
             'saveHTMLToTextarea'=>true,    // 保存 HTML 到 Textarea
@@ -104,7 +105,9 @@ function onfullscreenExit() {
         fullscreenExitTriger();
     }
 }
-var md{$keymd};md{$keymd}=editormd('$idMd',$mdJsOptionsJson,onfullscreen:onfullscreen,onfullscreenExit:onfullscreenExit});$('.editormd-preview-close-btn').hide();
+function onloadMd(){
+}
+var md{$keymd};md{$keymd}=editormd('$idMd',$mdJsOptionsJson,onfullscreen:onfullscreen,onfullscreenExit:onfullscreenExit,onload:onloadMd});$('.editormd-preview-close-btn').hide();
 ");
     }
 
