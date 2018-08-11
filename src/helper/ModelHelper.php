@@ -24,6 +24,20 @@ class ModelHelper
         return $err;
     }
 
+    /**
+     * @param $model \yii\base\Model
+     * @param $errors
+     * @return string
+     */
+    public static function getErrorToString($model){
+        $err = '';
+        foreach ($model->getErrors() as $k=>$v) {
+            $err .=$model->getAttributeLabel($k).':'.$v[0] . '<br>';
+        }
+        return $err;
+    }
+
+
     public static function clearRules($attribute,$rules){
         foreach ($rules as $k=>$rule){
             if(isset($rules[0])){

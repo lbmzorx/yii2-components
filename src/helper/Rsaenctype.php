@@ -139,7 +139,7 @@ class Rsaenctype extends BaseObject
             }
             return $rsa->private_decrypt($input);
         }catch (Exception $e){
-            return '.';
+            return ['res'=>'.'];
         }
     }
 
